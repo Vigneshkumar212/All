@@ -1,0 +1,1228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home - Microsoft Azure</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    color: #242424;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; }
+  a { color: #0078d4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 10; overflow: hidden;
+    height: 40px;
+    background: #0078d4;
+    color: #fff;
+    display: flex; align-items: center;
+  }
+  .tb-icon {
+    width: 48px; height: 40px; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; color: #fff; cursor: pointer; padding: 0;
+    position: relative;
+  }
+  .tb-icon:hover { background: rgba(255,255,255,.12); }
+  .tb-icon.narrow { width: 44px; }
+  .brand {
+    font-size: 15px; font-weight: 600; letter-spacing: .1px;
+    margin-left: 20px; margin-right: 25px; white-space: nowrap;
+  }
+  .upgrade { flex: none;
+    height: 26px; padding: 0 5px 0 4px;
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #bdf6e2; color: #1c1c1c;
+    border: 0; border-radius: 2px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .search-wrap { flex: 0 1 auto; min-width: 0; display: flex; padding: 0 16px 0 129px; }
+  .search {
+    width: 519px; max-width: 100%; min-width: 0; height: 32px;
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 4px;
+    display: flex; align-items: center; gap: 8px; padding: 0 10px 0 11px;
+    color: #707070; font-size: 14px;
+  }
+  .search input {
+    border: 0; outline: 0; flex: 1; font: inherit; color: #242424; background: transparent; padding: 0;
+  }
+  .search input::placeholder { color: #707070; }
+  .copilot {
+    height: 26px; padding: 0 10px 0 9px; margin-right: 4px; margin-left: auto; flex: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; color: #2a446f;
+    border: 0; border-radius: 2px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .badge {
+    position: absolute; top: 6px; left: 25px;
+    min-width: 13px; height: 13px; border-radius: 7px;
+    background: #fff; color: #0078d4;
+    font-size: 9px; font-weight: 700; line-height: 13px; text-align: center;
+  }
+  .account {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 2px 0 6px; height: 40px; cursor: pointer; flex: none;
+  }
+  .account:hover { background: rgba(255,255,255,.12); }
+  .acct-text { display: flex; flex-direction: column; line-height: 1.15; }
+  .acct-email {
+    font-size: 14px; max-width: 160px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .acct-dir {
+    font-size: 10px; font-weight: 600; text-transform: uppercase; max-width: 160px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .avatar {
+    position: relative; width: 28px; height: 28px; border-radius: 50%;
+    background: #c8c8c8; overflow: visible;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .avatar .lock {
+    position: absolute; right: -3px; bottom: -3px;
+  }
+
+  /* ---------- Page ---------- */
+  .page {
+    width: min(1340px, calc(100% - 32px)); margin: 0 auto; padding: 0 0 40px;
+  }
+  .hero {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 50px; height: 40px;
+  }
+  .hero h1 {
+    margin: 0; font-size: 32px; font-weight: 600; line-height: 40px; color: #242424;
+  }
+  .trial-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 33px; padding: 0 8px; gap: 4px;
+    background: #e8f2fd; border: 1px solid #afd2f8; border-radius: 4px;
+    color: #125ca9; font-size: 12px; font-weight: 600;
+    margin-top: -5px;
+  }
+
+  .card {
+    background: #fff; border-radius: 8px;
+    box-shadow: 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.14);
+  }
+  .icon-box {
+    width: 36px; height: 36px; border-radius: 4px; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    background: #e8f2fd;
+  }
+  .icon-box.red { background: #fdf3f4; }
+  .icon-box.green { background: #f1faf1; }
+
+  .quick {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-top: 30px;
+  }
+  .quick .card { padding: 16px; height: 155px; cursor: pointer; }
+  .quick .card:hover { box-shadow: 0 0 2px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.14); }
+  .quick h3 { margin: 13px 0 0; font-size: 16px; font-weight: 600; line-height: 22px; }
+  .quick p { margin: 12px 0 0; font-size: 14px; line-height: 20px; color: #242424; }
+
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-top: 32px;
+  }
+  .two-col .card { padding: 16px; height: 304px; display: flex; flex-direction: column; }
+  .card-head { display: flex; align-items: center; gap: 12px; height: 36px; }
+  .card-head h2 { margin: 0; font-size: 16px; font-weight: 600; flex: 1; }
+  .updated { font-size: 10px; color: #242424; }
+  .tiles { display: flex; gap: 10px; margin-top: 12px; height: 180px; }
+  .tile {
+    flex: 1; background: #fafafa; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .tile-title { font-size: 14px; font-weight: 600; margin-top: 2px; }
+  .tile-sub { font-size: 12px; line-height: 16px; color: #424242; max-width: 250px; }
+  .tile-num { font-size: 28px; font-weight: 600; line-height: 34px; margin: 2px 0 1px; }
+  .tile-small { font-size: 10px; color: #424242; }
+  .tile.left {
+    align-items: flex-start; text-align: left; padding: 0 14px;
+    font-size: 14px; line-height: 22px; color: #242424;
+  }
+  .tile.left b { font-weight: 600; }
+  .actions { display: flex; gap: 12px; margin-top: 13px; }
+  .btn {
+    height: 32px; padding: 0 12px;
+    background: #fff; color: #242424;
+    border: 1px solid #d1d1d1; border-radius: 4px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn:hover { background: #f5f5f5; border-color: #c7c7c7; }
+
+  .resources { margin-top: 32px; padding: 12px; }
+  .tabs { display: flex; margin-top: 15px; }
+  .tab {
+    position: relative; background: none; border: 0; cursor: pointer;
+    padding: 10px 12px 14px; font-size: 14px; color: #424242;
+  }
+  .tab.active { color: #242424; font-weight: 600; }
+  .tab.active::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px;
+    height: 3px; border-radius: 2px; background: #006ac6; bottom: 0;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th {
+    text-align: left; font-weight: 600; font-size: 14px; color: #242424;
+    height: 32px; padding: 0 8px; border-bottom: 1px solid #e0e0e0;
+  }
+  td { height: 44px; padding: 0 8px; font-size: 14px; }
+  .res-name { display: flex; align-items: center; gap: 6px; }
+
+  /* ---------- Lab guide (accordions) ---------- */
+  .lab { margin-top: 32px; padding: 16px; }
+  .lab .card-head h2 { flex: none; }
+  .lab-sub { font-size: 12px; color: #616161; margin-left: auto; }
+  .acc { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .acc details { border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; overflow: hidden; }
+  .acc summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; gap: 12px;
+    min-height: 52px; padding: 8px 16px;
+    font-size: 14px; font-weight: 600; color: #242424;
+  }
+  .acc summary::-webkit-details-marker { display: none; }
+  .acc summary:hover { background: #f5f5f5; }
+  .acc summary:focus-visible { outline: 2px solid #0f6cbd; outline-offset: -2px; border-radius: 8px; }
+  .acc .chev { flex: none; transition: transform .15s ease; }
+  .acc details[open] .chev { transform: rotate(90deg); }
+  .acc details[open] summary { border-bottom: 1px solid #e0e0e0; }
+  .acc .sum-title { flex: 1; }
+  .acc .sum-meta { font-size: 12px; font-weight: 400; color: #616161; }
+  .tag {
+    font-size: 12px; font-weight: 600; line-height: 20px;
+    padding: 0 8px; border-radius: 4px;
+    background: #e8f2fd; color: #125ca9; border: 1px solid #afd2f8;
+  }
+  .acc .body { padding: 4px 24px 20px 52px; font-size: 14px; line-height: 22px; max-width: 980px; }
+  .step h4 { margin: 16px 0 4px; font-size: 14px; font-weight: 600; }
+  .step p { margin: 0 0 4px; }
+  .step ol { margin: 0; padding-left: 22px; }
+  .step li { padding-left: 4px; }
+  .step li + li { margin-top: 2px; }
+  .ui { font-weight: 600; }
+  .arrow { color: #616161; padding: 0 3px; }
+  code {
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 13px;
+    background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 3px; padding: 0 4px;
+  }
+  .kv {
+    display: grid; grid-template-columns: max-content 1fr; gap: 0;
+    margin: 8px 0 10px; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; max-width: 480px;
+  }
+  .kv dt, .kv dd { margin: 0; padding: 6px 12px; border-bottom: 1px solid #e0e0e0; }
+  .kv dt { background: #fafafa; font-weight: 600; color: #424242; }
+  .kv dt:nth-last-of-type(1), .kv dd:last-of-type { border-bottom: 0; }
+  .code { border: 1px solid #e0e0e0; border-radius: 4px; background: #fafafa; margin: 8px 0 10px; overflow: hidden; }
+  .code-head {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 32px; padding: 0 4px 0 12px; border-bottom: 1px solid #e0e0e0;
+    font-size: 12px; font-weight: 600; color: #424242; background: #fff;
+  }
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 24px; padding: 0 8px; border: 0; border-radius: 4px; background: transparent;
+    font-size: 12px; color: #242424; cursor: pointer;
+  }
+  .copy-btn:hover { background: #f0f0f0; }
+  .code pre {
+    margin: 0; padding: 12px; overflow-x: auto;
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 13px; line-height: 20px; color: #242424;
+  }
+  .code .kw { color: #0f548c; } .code .str { color: #a31515; } .code .fn { color: #795e26; } .code .dec { color: #af00db; } .code .cm { color: #008000; }
+  .msgbar {
+    display: flex; gap: 8px; align-items: flex-start;
+    margin-top: 16px; padding: 10px 12px; border-radius: 4px;
+    background: #e8f2fd; border: 1px solid #afd2f8; color: #242424;
+  }
+  .msgbar svg { flex: none; margin-top: 3px; }
+  .msgbar.note { background: #fafafa; border-color: #e0e0e0; margin-top: 10px; }
+  .msgbar.success { background: #f1faf1; border-color: #9fd89f; }
+  .step ul { margin: 2px 0 0; padding-left: 20px; list-style: circle; }
+  .step .hint { font-size: 12px; line-height: 18px; color: #616161; margin: 2px 0 0; }
+  .res-icon { flex: none; }
+
+  /* ---------- Smaller screens ---------- */
+  @media (max-width: 1100px) {
+    .search-wrap { padding-left: 24px; }
+    .quick { grid-template-columns: repeat(2, 1fr); }
+    .quick .card { height: auto; min-height: 155px; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .search-wrap, .acct-text, .tb-icon.narrow, .copilot { display: none; }
+    .account { margin-left: auto; }
+    .hero { flex-direction: column; align-items: flex-start; height: auto; gap: 12px; margin-top: 24px; }
+    .hero h1 { font-size: 24px; line-height: 32px; }
+    .trial-pill { margin-top: 0; }
+    .quick { grid-template-columns: 1fr; }
+    .two-col .card { height: auto; }
+    .tiles { flex-direction: column; height: auto; }
+    .tile { min-height: 140px; padding: 16px; }
+    .card-head { flex-wrap: wrap; height: auto; }
+    .resources table { display: block; overflow-x: auto; }
+    .lab-sub { display: none; }
+    .acc .body { padding: 4px 16px 16px; }
+    .acc summary { padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="tb-icon" title="Portal menu" aria-label="Portal menu">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff">
+      <circle cx="2.5" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="13.5" cy="2.5" r="1.1"/>
+      <circle cx="2.5" cy="8" r="1.1"/><circle cx="8" cy="8" r="1.1"/><circle cx="13.5" cy="8" r="1.1"/>
+      <circle cx="2.5" cy="13.5" r="1.1"/><circle cx="8" cy="13.5" r="1.1"/><circle cx="13.5" cy="13.5" r="1.1"/>
+    </svg>
+  </button>
+  <button class="tb-icon" title="Show portal menu" aria-label="Show portal menu">
+    <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="#fff" stroke-width="1.2">
+      <path d="M1 2h14M1 7h14M1 12h14"/>
+    </svg>
+  </button>
+  <span class="brand">Microsoft Azure</span>
+  <button class="upgrade">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1c1c1c" stroke-width="1.1">
+      <circle cx="8" cy="8" r="6.5"/><path d="M8 11.5V5M5.3 7.6 8 4.9l2.7 2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Upgrade
+  </button>
+
+  <div class="search-wrap">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1">
+        <circle cx="9.5" cy="6.5" r="5"/><path d="M5.9 10.1 1.5 14.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search resources, services, and docs (G+/)">
+    </label>
+  </div>
+
+  <button class="copilot">
+    <svg width="18" height="18" viewBox="0 0 24 24">
+      <defs>
+        <linearGradient id="cpA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0fafff"/><stop offset="1" stop-color="#2052cb"/></linearGradient>
+        <linearGradient id="cpB" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb357"/><stop offset=".5" stop-color="#ff6f61"/><stop offset="1" stop-color="#e84aa8"/></linearGradient>
+        <linearGradient id="cpC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3dcbff"/><stop offset="1" stop-color="#9b5cff"/></linearGradient>
+      </defs>
+      <path d="M9.5 2h4.2L5.4 22H1.8L8 4.2C8.3 2.9 8.8 2 9.5 2Z" fill="url(#cpA)"/>
+      <path d="M11 22 17.3 4.5c.3-.9.8-1.5 1.6-1.5H20l2.2 19H11Z" fill="url(#cpB)"/>
+      <path d="M8 14h7.8L13.5 22H5.4Z" fill="url(#cpC)" opacity=".9"/>
+    </svg>
+    Copilot
+  </button>
+
+  <button class="tb-icon" title="Cloud Shell" aria-label="Cloud Shell">
+    <svg width="20" height="18" viewBox="0 0 20 18" fill="none" stroke="#fff" stroke-width="1.1">
+      <rect x="1" y="1.5" width="18" height="15" rx="1.5"/>
+      <path d="m5 6 3 3-3 3M10 12h5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <button class="tb-icon narrow" title="Notifications" aria-label="Notifications">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.1">
+      <path d="M10 2.5a5 5 0 0 0-5 5v3.6L3.5 14.2h13L15 11.1V7.5a5 5 0 0 0-5-5Z" stroke-linejoin="round"/>
+      <path d="M8 16.5a2 2 0 0 0 4 0"/>
+    </svg>
+    <span class="badge">1</span>
+  </button>
+  <button class="tb-icon narrow" title="Settings" aria-label="Settings">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.1">
+      <path d="M8.6 1.8h2.8l.4 2.3 1.5.8 2.2-.9 1.4 2.4-1.8 1.5v1.8l1.8 1.5-1.4 2.4-2.2-.9-1.5.8-.4 2.3H8.6l-.4-2.3-1.5-.8-2.2.9-1.4-2.4 1.8-1.5V8.1L3.1 6.6l1.4-2.4 2.2.9 1.5-.8Z" stroke-linejoin="round"/>
+      <circle cx="10" cy="10" r="2.6"/>
+    </svg>
+  </button>
+  <button class="tb-icon narrow" title="Help + support" aria-label="Help + support">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.1">
+      <circle cx="10" cy="10" r="8"/>
+      <path d="M7.7 7.8a2.3 2.3 0 1 1 3.4 2c-.7.4-1.1.9-1.1 1.7v.4" stroke-linecap="round"/>
+      <circle cx="10" cy="14.3" r=".5" fill="#fff"/>
+    </svg>
+  </button>
+  <button class="tb-icon narrow" title="Feedback" aria-label="Feedback">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.1">
+      <circle cx="7" cy="9" r="2.6"/>
+      <path d="M2 17.5c.4-2.6 2.5-4.2 5-4.2s4.6 1.6 5 4.2" stroke-linecap="round"/>
+      <path d="M9.5 2.5h8v6h-3l-2.2 2v-2" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="account" title="stellarnovacomet@outlook.com">
+    <div class="acct-text">
+      <span class="acct-email" contenteditable="true">stellarnovacomet@outlook.com</span>
+      <span class="acct-dir">Default Directory</span>
+    </div>
+    <div class="avatar">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="#fafafa">
+        <circle cx="11" cy="8" r="4.2"/><path d="M2.5 22c.8-4.6 4.3-7.5 8.5-7.5s7.7 2.9 8.5 7.5Z"/>
+      </svg>
+      <svg class="lock" width="10" height="12" viewBox="0 0 10 12">
+        <rect x="0.5" y="5" width="9" height="6.5" rx="1" fill="#fff"/>
+        <path d="M2.5 5V3.5a2.5 2.5 0 0 1 5 0V5" fill="none" stroke="#fff" stroke-width="1.3"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="hero">
+    <h1>Welcome back, <span contenteditable=""> Name</span></h1>
+    <span class="trial-pill">
+      Your free trial has expired.
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#125ca9" stroke-width="1">
+        <circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/>
+        <circle cx="8" cy="5" r=".55" fill="#125ca9" stroke="none"/>
+      </svg>
+    </span>
+  </div>
+
+  <section class="quick">
+    <div class="card">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f6cbd" stroke-width="1.4">
+          <rect x="2.5" y="4" width="19" height="16" rx="2.5"/>
+          <path d="M6 8.5h12M6 12h5M13 12h5M6 15.5h5M13 15.5h5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Start with a template</h3>
+      <p>Deploy in minutes using pre-made templates.</p>
+    </div>
+    <div class="card">
+      <div class="icon-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M14.5 8.2A5.6 5.6 0 0 0 4.2 10.6 3.9 3.9 0 0 0 5.4 18.3H11" stroke="#0f6cbd" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="16.5" cy="15" r="5.2" fill="#0f6cbd"/>
+          <path d="M16.5 12.4v5.2M13.9 15h5.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Create a resource</h3>
+      <p>Choose a service to create a resource in your subscription.</p>
+    </div>
+    <div class="card">
+      <div class="icon-box">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <defs>
+            <linearGradient id="aiA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9168f6"/><stop offset="1" stop-color="#4f3bd6"/></linearGradient>
+            <linearGradient id="aiB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ab0ff"/><stop offset="1" stop-color="#2463e8"/></linearGradient>
+            <linearGradient id="aiC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6ad5"/><stop offset="1" stop-color="#c13fe6"/></linearGradient>
+          </defs>
+          <path d="M10.5 2.5h5L8.2 21.5H3.5L9 4.3c.3-1.1.7-1.8 1.5-1.8Z" fill="url(#aiA)"/>
+          <path d="M15.5 2.5h1.2c.8 0 1.3.5 1.6 1.4l3.2 9.6h-6.3Z" fill="url(#aiC)"/>
+          <path d="M8.5 13.5h12.2c.5 0 .8.6.5 1l-4.4 6.2c-.4.5-.9.8-1.5.8H5.4Z" fill="url(#aiB)"/>
+        </svg>
+      </div>
+      <h3>Build an AI agent</h3>
+      <p>Create and manage AI apps and agents using the latest models.</p>
+    </div>
+    <div class="card">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="#0f6cbd">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+        </svg>
+      </div>
+      <h3>Import code from GitHub</h3>
+      <p>Connect your GitHub account and deploy existing repositories.</p>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div class="card">
+      <div class="card-head">
+        <div class="icon-box red">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="#c50f1f" stroke-width="1.2">
+            <path d="M10 2.5a5 5 0 0 0-5 5v3.6L3.5 14.2h13L15 11.1V7.5a5 5 0 0 0-5-5Z" stroke-linejoin="round"/>
+            <path d="M8 16.5a2 2 0 0 0 4 0"/>
+          </svg>
+        </div>
+        <h2>Alerts and service issues</h2>
+        <span class="updated">Last updated: a few seconds ago</span>
+      </div>
+      <div class="tiles">
+        <div class="tile">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#242424" stroke-width="1">
+            <path d="M10 2.5a5 5 0 0 0-5 5v3.6L3.5 14.2h13L15 11.1V7.5a5 5 0 0 0-5-5Z" stroke-linejoin="round"/>
+            <path d="M8 16.5a2 2 0 0 0 4 0"/>
+          </svg>
+          <div class="tile-title">No alerts set up</div>
+          <div class="tile-sub">Detect and respond to issues early, like errors or performance issues</div>
+        </div>
+        <div class="tile">
+          <div class="tile-title">Service issues</div>
+          <div class="tile-num">0</div>
+          <div class="tile-small">Active issues affecting Azure services reported by Microsoft</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn">Set up alerts</button>
+        <button class="btn">View service issues</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="icon-box green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#063b06" stroke-width="1.3">
+            <rect x="2.5" y="5" width="17" height="11" rx="1.5"/>
+            <circle cx="11" cy="10.5" r="2.4"/>
+            <path d="M5 8v.01M17 13v.01" stroke-linecap="round" stroke-width="1.8"/>
+            <path d="M5 18.8h14.5a2 2 0 0 0 2-2V8.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Costs</h2>
+        <span class="updated">Last updated: a few seconds ago</span>
+      </div>
+      <div class="tiles">
+        <div class="tile left">
+          <div><b>Your free trial has expired.</b></div>
+          <div>Your services are paused. On November 17, 2026 your account will be deleted.</div>
+          <div>Upgrade your subscription to keep using Azure.</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn">Upgrade</button>
+        <button class="btn">Learn more</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card resources">
+    <div class="card-head">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#006ac6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.2 9.5A8.2 8.2 0 1 1 3.8 13"/>
+          <path d="M3.5 5v4.7h4.7"/>
+          <path d="M12 7.5V12l3 2"/>
+        </svg>
+      </div>
+      <h2>Resources</h2>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true">Recently viewed</button>
+      <button class="tab" role="tab" aria-selected="false">Favorites</button>
+    </div>
+    <table>
+      <colgroup><col style="width:580px"><col style="width:329px"><col style="width:142px"><col></colgroup>
+      <thead>
+        <tr><th>Resource name</th><th>Type</th><th>Alerts</th><th>Last viewed</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="res-name">
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <defs>
+                  <radialGradient id="glb" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#5ea0ef"/><stop offset="1" stop-color="#0078d4"/></radialGradient>
+                </defs>
+                <circle cx="9" cy="9" r="8.5" fill="url(#glb)"/>
+                <path d="M3.2 5.2c1.6.3 2.6 1.4 2.4 2.7-.2 1-1.4 1.2-1.6 2.4-.1.9.6 1.7.4 2.9A8.4 8.4 0 0 1 3.2 5.2Z" fill="#fff" opacity=".6"/>
+                <path d="M10.5 1.6c.4 1.2-.2 2.2-1.3 2.5 1.2.6 2.8.2 3.8-.7a8.5 8.5 0 0 0-2.5-1.8Z" fill="#fff" opacity=".6"/>
+                <circle cx="13.2" cy="13" r="2.3" fill="#50e6ff"/>
+                <circle cx="6.5" cy="14.7" r="1.4" fill="#c3f1ff"/>
+                <circle cx="14.2" cy="6.8" r="1.2" fill="#c3f1ff"/>
+              </svg>
+              <a href="#">devTeamApp</a>
+            </span>
+          </td>
+          <td>App Service</td>
+          <td><a href="#">0</a></td>
+          <td>6 days ago</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card lab">
+    <div class="card-head">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f6cbd" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M3 5.5c2.8-1 5.8-.8 9 1.2v13c-3.2-2-6.2-2.2-9-1.2Z"/>
+          <path d="M21 5.5c-2.8-1-5.8-.8-9 1.2v13c3.2-2 6.2-2.2 9-1.2Z"/>
+        </svg>
+      </div>
+      <h2>1.2 Deploy IaaS and PaaS on Azure</h2>
+      <span class="lab-sub">2 lab exercises</span>
+    </div>
+
+    <div class="acc">
+      <!-- ===== Part A ===== -->
+      <details>
+        <summary>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg>
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <defs><linearGradient id="vmG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ea0ef"/><stop offset="1" stop-color="#0078d4"/></linearGradient></defs>
+            <rect x="1" y="2" width="18" height="12" rx="1" fill="url(#vmG)"/>
+            <path d="M10 4.6 13.3 6.5v3.8L10 12.2 6.7 10.3V6.5Z" fill="#c3f1ff"/>
+            <path d="M7 18h6M10 14v4" stroke="#7a7a7a" stroke-width="1.6"/>
+          </svg>
+          <span class="sum-title">Part A &ndash; Deploy IaaS using Azure Virtual Machine</span>
+          <span class="tag">IaaS</span>
+        </summary>
+        <div class="body">
+          <div class="step">
+            <h4>Step 1: Open Azure Portal</h4>
+            <ol>
+              <li>Open a web browser.</li>
+              <li>Go to the <span class="ui">Azure Portal</span> (<code>portal.azure.com</code>).</li>
+              <li>Sign in using your Azure account.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 2: Create a Virtual Machine</h4>
+            <ol>
+              <li>Search for <span class="ui">Virtual machines</span>.</li>
+              <li>Click <span class="ui">Create</span><span class="arrow">&rarr;</span><span class="ui">Azure virtual machine</span>.</li>
+              <li>Select or create a <span class="ui">Resource group</span>.</li>
+              <li>Enter a <span class="ui">VM name</span>.</li>
+              <li>Select an appropriate <span class="ui">Region</span>.</li>
+              <li>Select an operating system such as <span class="ui">Ubuntu Linux</span>.</li>
+              <li>Select a suitable <span class="ui">VM size</span>.</li>
+              <li>Configure authentication.</li>
+              <li>Configure the required networking options.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 3: Interact with the IaaS VM</h4>
+            <p>After deployment:</p>
+            <ol>
+              <li>Open the VM.</li>
+              <li>Check its CPU, memory, disk, networking, and operating system settings.</li>
+              <li>Use the <span class="ui">Connect</span> option to connect to the VM.</li>
+              <li>Open the Linux terminal.</li>
+              <li>Execute basic commands such as:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head">
+                <span>Bash</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre>uname -a              <span class="cm"># kernel and OS details</span>
+cat /etc/os-release   <span class="cm"># Linux distribution</span>
+lscpu                 <span class="cm"># CPU information</span>
+free -h               <span class="cm"># memory usage</span>
+df -h                 <span class="cm"># disk usage</span>
+ip addr               <span class="cm"># network interfaces</span></pre>
+            </div>
+          </div>
+          <div class="msgbar" role="note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#0f6cbd" stroke-width="1.1"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/><circle cx="8" cy="5" r=".6" fill="#0f6cbd" stroke="none"/></svg>
+            <div><b>Observation:</b> In IaaS, the user has greater control over the virtual machine, operating system, storage, and network configuration.</div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ===== Part B ===== -->
+      <details>
+        <summary>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg>
+          <svg width="20" height="20" viewBox="0 0 18 18">
+            <defs><radialGradient id="glb2" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#5ea0ef"/><stop offset="1" stop-color="#0078d4"/></radialGradient></defs>
+            <circle cx="9" cy="9" r="8.5" fill="url(#glb2)"/>
+            <path d="M3.2 5.2c1.6.3 2.6 1.4 2.4 2.7-.2 1-1.4 1.2-1.6 2.4-.1.9.6 1.7.4 2.9A8.4 8.4 0 0 1 3.2 5.2Z" fill="#fff" opacity=".6"/>
+            <path d="M10.5 1.6c.4 1.2-.2 2.2-1.3 2.5 1.2.6 2.8.2 3.8-.7a8.5 8.5 0 0 0-2.5-1.8Z" fill="#fff" opacity=".6"/>
+            <circle cx="13.2" cy="13" r="2.3" fill="#50e6ff"/>
+            <circle cx="6.5" cy="14.7" r="1.4" fill="#c3f1ff"/>
+            <circle cx="14.2" cy="6.8" r="1.2" fill="#c3f1ff"/>
+          </svg>
+          <span class="sum-title">Part B &ndash; Deploy PaaS using Azure App Service</span>
+          <span class="tag">PaaS</span>
+        </summary>
+        <div class="body">
+          <div class="step">
+            <h4>Step 1: Open Azure App Service</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">App Services</span>.</li>
+              <li>Click <span class="ui">Create</span><span class="arrow">&rarr;</span><span class="ui">Web App</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 2: Configure Web App</h4>
+            <ol>
+              <li>Enter the required details. Example:
+                <dl class="kv">
+                  <dt>Resource Group</dt><dd><code>Cloud-PaaS-RG</code></dd>
+                  <dt>App Name</dt><dd><code>cloud-paas-demo</code></dd>
+                  <dt>Runtime Stack</dt><dd>Python</dd>
+                  <dt>Operating System</dt><dd>Linux</dd>
+                </dl>
+              </li>
+              <li>Select an appropriate <span class="ui">Region</span>.</li>
+              <li>Select a suitable <span class="ui">Pricing plan</span>.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 3: Deploy an Application</h4>
+            <p>Create a simple web application using Python Flask. Example:</p>
+            <div class="code">
+              <div class="code-head">
+                <span>Python &middot; app.py</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = Flask(__name__)
+
+<span class="dec">@app.route</span>(<span class="str">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="str">"Welcome to PaaS Cloud Computing"</span>
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    app.run()</pre>
+            </div>
+            <p>Deploy the application to Azure App Service.</p>
+          </div>
+          <div class="step">
+            <h4>Step 4: Interact with the Application</h4>
+            <ol>
+              <li>Open the deployed App Service.</li>
+              <li>Click the application <span class="ui">URL</span>.</li>
+              <li>Verify that the web application is running.</li>
+            </ol>
+            <div class="msgbar note" role="note">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/><circle cx="8" cy="5" r=".6" fill="#424242" stroke="none"/></svg>
+              <div>In PaaS, the user does not need to manage the underlying physical server or operating system.</div>
+            </div>
+          </div>
+          <div class="msgbar" role="note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#0f6cbd" stroke-width="1.1"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/><circle cx="8" cy="5" r=".6" fill="#0f6cbd" stroke="none"/></svg>
+            <div><b>Observation:</b> PaaS provides less infrastructure control than IaaS but makes application deployment easier because the cloud provider manages the underlying platform.</div>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===================== 2.1 ===================== -->
+  <section class="card lab">
+    <div class="card-head">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f6cbd" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M3 5.5c2.8-1 5.8-.8 9 1.2v13c-3.2-2-6.2-2.2-9-1.2Z"/>
+          <path d="M21 5.5c-2.8-1-5.8-.8-9 1.2v13c3.2-2 6.2-2.2 9-1.2Z"/>
+        </svg>
+      </div>
+      <h2>2.1 Static Website on Azure Storage</h2>
+      <span class="lab-sub">1 lab exercise</span>
+    </div>
+
+    <div class="acc">
+      <details>
+        <summary>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg>
+          <svg class="res-icon" width="20" height="20" viewBox="0 0 20 20">
+            <rect x="1" y="3" width="18" height="14" rx="1.5" fill="#a0a1a2"/>
+            <rect x="2.5" y="7" width="7" height="4" fill="#0078d4"/><rect x="10.5" y="7" width="7" height="4" fill="#0078d4"/>
+            <rect x="2.5" y="12" width="7" height="3.5" fill="#37c2b1"/><rect x="10.5" y="12" width="7" height="3.5" fill="#37c2b1"/>
+          </svg>
+          <span class="sum-title">To create a free Azure account and deploy a simple static website using Azure Storage.</span>
+          <span class="tag">Storage</span>
+        </summary>
+        <div class="body">
+          <div class="step">
+            <h4>Step 1: Create an Azure Account</h4>
+            <ol>
+              <li>Open a web browser.</li>
+              <li>Go to the Microsoft Azure website (<code>azure.microsoft.com</code>).</li>
+              <li>Click <span class="ui">Start free</span>.</li>
+              <li>Sign in using a Microsoft account.</li>
+              <li>Complete the required registration and verification process.</li>
+              <li>After successful registration, open the <span class="ui">Azure Portal</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 2: Create a Resource Group</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Resource groups</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Select the Azure <span class="ui">Subscription</span>.</li>
+              <li>Enter the Resource Group name as <code>RG-StaticWebsite</code>.</li>
+              <li>Select a suitable <span class="ui">Region</span>.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 3: Create a Storage Account</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Storage accounts</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Select the previously created Resource Group <code>RG-StaticWebsite</code>.</li>
+              <li>Enter a unique name for the Storage Account.
+                <p class="hint">Use 3&ndash;24 lowercase letters and numbers only, e.g. <code>staticsite12345</code>.</p>
+              </li>
+              <li>Select a suitable <span class="ui">Region</span>.</li>
+              <li>Select <span class="ui">Standard</span> performance.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>After deployment is complete, click <span class="ui">Go to resource</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 4: Enable Static Website</h4>
+            <ol>
+              <li>Open the created Storage Account.</li>
+              <li>From the left-side menu, select <span class="ui">Static website</span>.</li>
+              <li>Change the Static website option from <span class="ui">Disabled</span> to <span class="ui">Enabled</span>.</li>
+              <li>Enter <code>index.html</code> as the <span class="ui">Index document name</span>.</li>
+              <li>Enter <code>404.html</code> as the <span class="ui">Error document path</span>.</li>
+              <li>Click <span class="ui">Save</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 5: Create the Website Files</h4>
+            <ol>
+              <li>Open a text editor such as Notepad.</li>
+              <li>Create a file named <code>index.html</code> and add the following HTML code:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head">
+                <span>HTML &middot; index.html</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My Azure Static Website&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;main class="card"&gt;
+    &lt;h1&gt;Hi there!&lt;/h1&gt;
+    &lt;p&gt;This static website is hosted on Azure Storage.&lt;/p&gt;
+    &lt;button onclick="alert('Hello from Azure!')"&gt;Click me&lt;/button&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+            </div>
+            <ol start="3">
+              <li>Create a file named <code>style.css</code> and add the following CSS code:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head">
+                <span>CSS &middot; style.css</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre>body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f3f6fb;
+}
+
+.card {
+  background: #fff;
+  padding: 32px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+h1 {
+  margin-top: 0;
+  color: #0078d4;
+}
+
+button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  background: #0078d4;
+  color: #fff;
+  cursor: pointer;
+}</pre>
+            </div>
+            <div class="msgbar note" role="note">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/><circle cx="8" cy="5" r=".6" fill="#424242" stroke="none"/></svg>
+              <div>In Notepad, choose <span class="ui">Save as type: All files (*.*)</span> when saving, so the files are not saved as <code>index.html.txt</code> or <code>style.css.txt</code>. Save both files in the same folder.</div>
+            </div>
+          </div>
+          <div class="step">
+            <h4>Step 6: Open the $web Container</h4>
+            <ol>
+              <li>Go back to the Azure Storage Account.</li>
+              <li>Select <span class="ui">Containers</span> from the left-side menu.</li>
+              <li>Open the automatically created <code>$web</code> container.</li>
+              <li>This container is used to store the static website files.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 7: Upload Website Files</h4>
+            <ol>
+              <li>Inside the <code>$web</code> container, click <span class="ui">Upload</span>.</li>
+              <li>Click <span class="ui">Browse for files</span>.</li>
+              <li>Select <code>index.html</code>.</li>
+              <li>Select <code>style.css</code>.</li>
+              <li>Click <span class="ui">Upload</span>.</li>
+              <li>Wait until the files are successfully uploaded.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 8: Access the Static Website</h4>
+            <ol>
+              <li>Go to <span class="ui">Static website</span> in the Storage Account.</li>
+              <li>Find the <span class="ui">Primary endpoint</span>.</li>
+              <li>Copy the website URL provided by Azure.</li>
+              <li>Open a new browser tab.</li>
+              <li>Paste the copied URL.</li>
+              <li>Press <span class="ui">Enter</span>.</li>
+              <li>Verify that the static website is displayed successfully.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 9: Test the Website</h4>
+            <ol>
+              <li>Check whether the webpage is displayed correctly.</li>
+              <li>Verify that the HTML content is visible.</li>
+              <li>Check whether the CSS styling is applied.</li>
+              <li>Click the button on the webpage, if included.</li>
+              <li>Verify that the website is accessible through the Azure URL.</li>
+            </ol>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===================== 2.2 ===================== -->
+  <section class="card lab">
+    <div class="card-head">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f6cbd" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M3 5.5c2.8-1 5.8-.8 9 1.2v13c-3.2-2-6.2-2.2-9-1.2Z"/>
+          <path d="M21 5.5c-2.8-1-5.8-.8-9 1.2v13c3.2-2 6.2-2.2 9-1.2Z"/>
+        </svg>
+      </div>
+      <h2>2.2 Explore the Azure Portal</h2>
+      <span class="lab-sub">1 lab exercise</span>
+    </div>
+
+    <div class="acc">
+      <details>
+        <summary>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg>
+          <svg class="res-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 2.5H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h2M15 2.5h2a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-2" stroke="#949494" stroke-width="1.6"/>
+            <path d="M10 5 14 7.2v4.6L10 14l-4-2.2V7.2Z" fill="#0078d4"/>
+            <path d="M10 5 14 7.2 10 9.4 6 7.2Z" fill="#50e6ff"/>
+          </svg>
+          <span class="sum-title">To explore the Azure Portal and create a Resource Group, Virtual Machine, and Storage Account using Microsoft Azure.</span>
+          <span class="tag">Portal</span>
+        </summary>
+        <div class="body">
+          <div class="step">
+            <h4>Step 1: Open Azure Portal</h4>
+            <ol>
+              <li>Open a web browser.</li>
+              <li>Go to the <span class="ui">Azure Portal</span> (<code>portal.azure.com</code>).</li>
+              <li>Sign in using your Microsoft account.</li>
+              <li>The Azure Portal Dashboard will be displayed.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 2: Create a Resource Group</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Resource groups</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Select your <span class="ui">Subscription</span>.</li>
+              <li>Enter the Resource Group name as <code>RG-AzureLab</code>.</li>
+              <li>Select a suitable <span class="ui">Region</span>.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>The Resource Group will be created successfully.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 3: Create a Virtual Machine</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Virtual machines</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Select <span class="ui">Azure virtual machine</span>.</li>
+              <li>Select the previously created Resource Group <code>RG-AzureLab</code>.</li>
+              <li>Enter the Virtual Machine name as <code>AzureVM</code>.</li>
+              <li>Select a suitable <span class="ui">Region</span>.</li>
+              <li>Select an operating system such as <span class="ui">Ubuntu Linux</span> or <span class="ui">Windows Server</span>.</li>
+              <li>Select an appropriate <span class="ui">VM size</span>.</li>
+              <li>Enter a <span class="ui">Username</span> for the VM.</li>
+              <li>Select an appropriate authentication method.</li>
+              <li>Configure the required network settings.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>After validation, click <span class="ui">Create</span>.</li>
+              <li>Wait for the deployment to complete.</li>
+              <li>Click <span class="ui">Go to resource</span> to view the Virtual Machine.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 4: Explore the Virtual Machine</h4>
+            <ol>
+              <li>Open the created <code>AzureVM</code>.</li>
+              <li>Observe the VM <span class="ui">Overview</span> page.</li>
+              <li>Check the VM status.</li>
+              <li>Explore options such as:
+                <ul>
+                  <li>Start</li>
+                  <li>Stop</li>
+                  <li>Restart</li>
+                  <li>Networking</li>
+                  <li>Disks</li>
+                  <li>Monitoring</li>
+                </ul>
+              </li>
+              <li>Note the <span class="ui">Public IP address</span> of the VM.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 5: Create a Storage Account</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Storage accounts</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Select the Resource Group <code>RG-AzureLab</code>.</li>
+              <li>Enter a unique <span class="ui">Storage account name</span>.
+                <p class="hint">Use 3&ndash;24 lowercase letters and numbers only, e.g. <code>azurelab12345</code>.</p>
+              </li>
+              <li>Select a suitable <span class="ui">Region</span>.</li>
+              <li>Select <span class="ui">Standard</span> performance.</li>
+              <li>Select an appropriate <span class="ui">Redundancy</span> option.</li>
+              <li>Click <span class="ui">Review + create</span>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Wait for the deployment to complete.</li>
+              <li>Click <span class="ui">Go to resource</span>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 6: Explore the Storage Account</h4>
+            <ol>
+              <li>Open the created Storage Account.</li>
+              <li>Select <span class="ui">Containers</span> from the left-side menu.</li>
+              <li>Click <span class="ui">+ Container</span>.</li>
+              <li>Enter the container name as <code>labdata</code>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>Open the <code>labdata</code> container.</li>
+              <li>Explore the options for uploading and managing files.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 7: Verify the Resources</h4>
+            <ol>
+              <li>Go to <span class="ui">Resource groups</span>.</li>
+              <li>Open <code>RG-AzureLab</code>.</li>
+              <li>Verify that the following resources are available:
+                <ul>
+                  <li>Virtual Machine</li>
+                  <li>Storage Account</li>
+                </ul>
+              </li>
+              <li>Open each resource and explore its basic configuration and management options.</li>
+            </ol>
+            <div class="msgbar note" role="note">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.2" stroke-linecap="round"/><circle cx="8" cy="5" r=".6" fill="#424242" stroke="none"/></svg>
+              <div>The resource group will also list resources created automatically with the VM, such as its disk, network interface, public IP address, network security group, and virtual network.</div>
+            </div>
+          </div>
+          <div class="msgbar success" role="note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#107c10" stroke-width="1.2"><circle cx="8" cy="8" r="6.5"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><b>Result:</b> Thus, the Azure Portal was successfully explored, and a Resource Group, Virtual Machine, and Storage Account were created and managed successfully.</div>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===================== 2.3 ===================== -->
+  <section class="card lab">
+    <div class="card-head">
+      <div class="icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f6cbd" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M3 5.5c2.8-1 5.8-.8 9 1.2v13c-3.2-2-6.2-2.2-9-1.2Z"/>
+          <path d="M21 5.5c-2.8-1-5.8-.8-9 1.2v13c3.2-2 6.2-2.2 9-1.2Z"/>
+        </svg>
+      </div>
+      <h2>2.3 Blob Storage and Data Persistence</h2>
+      <span class="lab-sub">1 lab exercise</span>
+    </div>
+
+    <div class="acc">
+      <details>
+        <summary>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg>
+          <svg class="res-icon" width="20" height="20" viewBox="0 0 20 20">
+            <rect x="1" y="3" width="18" height="14" rx="1.5" fill="#a0a1a2"/>
+            <rect x="2.5" y="7" width="7" height="4" fill="#0078d4"/><rect x="10.5" y="7" width="7" height="4" fill="#0078d4"/>
+            <rect x="2.5" y="12" width="7" height="3.5" fill="#37c2b1"/><rect x="10.5" y="12" width="7" height="3.5" fill="#37c2b1"/>
+          </svg>
+          <span class="sum-title">To create a Blob container in Azure Storage and upload and download files to verify data persistence.</span>
+          <span class="tag">Blob</span>
+        </summary>
+        <div class="body">
+          <div class="step">
+            <h4>Step 1: Open Azure Portal</h4>
+            <ol>
+              <li>Open a web browser.</li>
+              <li>Go to the <span class="ui">Azure Portal</span> (<code>portal.azure.com</code>).</li>
+              <li>Sign in using your Microsoft account.</li>
+              <li>The Azure Portal Dashboard will be displayed.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 2: Open Storage Account</h4>
+            <ol>
+              <li>In the Azure Portal, search for <span class="ui">Storage accounts</span>.</li>
+              <li>Click <span class="ui">Storage accounts</span>.</li>
+              <li>Select the previously created Storage Account.</li>
+              <li>The Storage Account <span class="ui">Overview</span> page will be displayed.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 3: Create a Blob Container</h4>
+            <ol>
+              <li>From the left-side menu, select <span class="ui">Data storage</span>.</li>
+              <li>Click <span class="ui">Containers</span>.</li>
+              <li>Click <span class="ui">+ Container</span>.</li>
+              <li>Enter the container name as <code>labcontainer</code>.</li>
+              <li>Click <span class="ui">Create</span>.</li>
+              <li>The <code>labcontainer</code> will be created successfully.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 4: Create a File</h4>
+            <ol>
+              <li>Open Notepad on the computer.</li>
+              <li>Type some sample text, for example:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head">
+                <span>Text &middot; sample.txt</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre>Azure Blob Storage Lab
+This file is stored in the cloud.</pre>
+            </div>
+            <ol start="3">
+              <li>Save the file as <code>sample.txt</code>.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 5: Upload the File</h4>
+            <ol>
+              <li>Open the <code>labcontainer</code>.</li>
+              <li>Click <span class="ui">Upload</span>.</li>
+              <li>Click <span class="ui">Browse for files</span>.</li>
+              <li>Select the <code>sample.txt</code> file.</li>
+              <li>Click <span class="ui">Upload</span>.</li>
+              <li>The file will appear inside the container.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 6: View the Uploaded File</h4>
+            <ol>
+              <li>Select <code>sample.txt</code>.</li>
+              <li>Observe the file details.</li>
+              <li>Check the file name and size.</li>
+              <li>The file is now stored in Azure Blob Storage.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 7: Download the File</h4>
+            <ol>
+              <li>Select the uploaded <code>sample.txt</code> file.</li>
+              <li>Click <span class="ui">Download</span>.</li>
+              <li>The file will be downloaded to the local computer.</li>
+              <li>Open the downloaded file.</li>
+              <li>Verify that the original content is present:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head"><span>Expected content</span></div>
+<pre>Azure Blob Storage Lab
+This file is stored in the cloud.</pre>
+            </div>
+          </div>
+          <div class="step">
+            <h4>Step 8: Edit the File in Azure</h4>
+            <ol>
+              <li>Open the <code>labcontainer</code> container.</li>
+              <li>Click the uploaded <code>sample.txt</code> file.</li>
+              <li>Click <span class="ui">Edit</span>.</li>
+              <li>The file content will be displayed in the editor.</li>
+              <li>Add the following content:</li>
+            </ol>
+            <div class="code">
+              <div class="code-head">
+                <span>Text &middot; sample.txt</span>
+                <button class="copy-btn" type="button"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#424242" stroke-width="1.1"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span>Copy</span></button>
+              </div>
+<pre>Azure Blob Storage Lab
+This file is stored in the cloud.
+File edited successfully in Azure.</pre>
+            </div>
+            <ol start="6">
+              <li>Click <span class="ui">Save</span>.</li>
+              <li>The changes will be saved directly to Blob Storage.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 9: Download the Modified File</h4>
+            <ol>
+              <li>Select the edited <code>sample.txt</code> file.</li>
+              <li>Click <span class="ui">Download</span>.</li>
+              <li>Save the file to the local computer.</li>
+              <li>Open the downloaded file.</li>
+              <li>Verify that the newly added content is present.</li>
+            </ol>
+          </div>
+          <div class="step">
+            <h4>Step 10: Verify Data Persistence</h4>
+            <ol>
+              <li>Close the Azure Portal.</li>
+              <li>Open the Azure Portal again.</li>
+              <li>Navigate to the Storage Account.</li>
+              <li>Open <span class="ui">Containers</span><span class="arrow">&rarr;</span><code>labcontainer</code>.</li>
+              <li>Select <code>sample.txt</code>.</li>
+              <li>Click <span class="ui">Edit</span>.</li>
+              <li>Verify that the added content is still present.</li>
+              <li>Download the file again and verify its contents.</li>
+            </ol>
+          </div>
+          <div class="msgbar success" role="note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#107c10" stroke-width="1.2"><circle cx="8" cy="8" r="6.5"/><path d="m5.3 8.2 1.8 1.8 3.6-3.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><b>Result:</b> Thus, a Blob container was successfully created in Azure Storage, and a file was uploaded and downloaded successfully. The persistence of the uploaded data was verified.</div>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.code').querySelector('pre').innerText;
+      var label = btn.querySelector('span');
+      var done = function () { label.textContent = 'Copied'; setTimeout(function () { label.textContent = 'Copy'; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+    });
+  });
+</script>
+
+</body>
+</html>
