@@ -1223,6 +1223,69 @@ File edited successfully in Azure.</pre>
     });
   });
 </script>
+Here is the complete, zero-configuration-needed process from scratch. If you follow these exact steps and copy the code blocks provided, it will deploy and work immediately without you needing to touch the Azure Portal settings.
+Step 1: Create a clean project folder on your computer
+ * Open your terminal or PowerShell.
+ * Create a brand new folder for your project and navigate into it:
+   mkdir flask-azure-demo
+cd flask-azure-demo
+
+Step 2: Create your project files
+Create two files in this folder (app.py and requirements.txt) and paste the exact code provided below into them.
+1. Create app.py
+Copy and paste this exact code:
+from flask import Flask
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def home():
+  return "Welcome to PaaS Cloud Computing"
+
+
+if __name__ == "__main__":
+  app.run()
+
+2. Create requirements.txt
+Copy and paste this exact code:
+blinker==1.9.0
+click==8.5.0
+Flask==3.1.3
+gunicorn==26.2.0
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+Werkzeug==3.1.9
+
+Step 3: Package your files into a clean zip
+Make sure you zip only the contents inside the folder (app.py and requirements.txt), not the folder itself.
+Run this command in your terminal while inside your project folder:
+Compress-Archive -Path app.py, requirements.txt -DestinationPath app.zip -Force
+
+Step 4: Run the deployment commands in your terminal
+Run these commands one by one to log in, create the app, and deploy it with everything configured automatically:
+ * Log into Azure:
+   az login
+
+   (Complete your browser login / MFA).
+ * Create the App Service Plan (Linux):
+   az appservice plan create --name myAppServicePlan --resource-group TestResource --sku B1 --is-linux
+
+ * Create the Web App and automatically set Python & Startup Command:
+   (By passing --startup-file "gunicorn --bind=0.0.0.0:8000 app:app", Azure configures the server command for you instantly without you needing to visit the web portal).
+   az webapp create --name TestWebAppprogram --resource-group TestResource --plan myAppServicePlan --runtime "PYTHON:3.11" --startup-file "gunicorn --bind=0.0.0.0:8000 app:app"
+
+ * Enable remote build automation so it installs your requirements.txt on Azure:
+   az webapp config appsettings set --name TestWebAppprogram --resource-group TestResource --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+
+ * Deploy your app.zip file:
+   az webapp deploy --name TestWebAppprogram --resource-group TestResource --src-path app.zip --type zip
+
+Step 5: View your live app!
+Once the deployment completes successfully, open your browser and go to your default azure websites URL:
+👉 [http://testwebappprogram.azurewebsites.net](http://testwebappprogram.azurewebsites.net) (or the .scm / standard web app link provided in your deployment success logs).
+You will see "Welcome to PaaS Cloud Computing" right away!
 
 </body>
 </html>
