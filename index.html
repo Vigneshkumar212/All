@@ -1286,6 +1286,273 @@ Step 5: View your live app!
 Once the deployment completes successfully, open your browser and go to your default azure websites URL:
 👉 [http://testwebappprogram.azurewebsites.net](http://testwebappprogram.azurewebsites.net) (or the .scm / standard web app link provided in your deployment success logs).
 You will see "Welcome to PaaS Cloud Computing" right away!
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Config Flask Deployment to Azure</title>
+    <style>
+        :root {
+            --primary: #0078d4;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #24292f;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --accent: #107c41;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0078d4, #004578);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+
+        .step-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .file-header {
+            background: #e1dfdd;
+            padding: 8px 15px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #323130;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-container {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            margin: 0;
+            overflow-x: auto;
+            font-family: "Consolas", "Courier New", Courier, monospace;
+            font-size: 0.95rem;
+        }
+
+        .standalone-code pre {
+            border-radius: 6px;
+        }
+
+        .copy-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .note {
+            background-color: #fff4ce;
+            border-left: 4px solid #f2c80f;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .success-banner {
+            background: var(--accent);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Zero-Configuration Flask Deployment</h1>
+        <p>Follow these steps to deploy your Python Flask Web App to Azure App Service seamlessly without tweaking Portal settings manually.</p>
+    </header>
+
+    <!-- STEP 1 -->
+    <div class="step-card">
+        <h2><span class="step-number">1</span> Create a Clean Project Folder</h2>
+        <p>Open your Terminal or PowerShell and create a fresh working directory:</p>
+        <div class="code-container standalone-code">
+            <pre><code>mkdir flask-azure-demo
+cd flask-azure-demo</code></pre>
+        </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-card">
+        <h2><span class="step-number">2</span> Create Required Files</h2>
+        <p>Create these exact two files inside your project directory:</p>
+
+        <!-- FILE 1 -->
+        <div class="code-container">
+            <div class="file-header">
+                <span>app.py</span>
+                <button class="copy-btn" onclick="copyText('app-code')">Copy</button>
+            </div>
+            <pre><code id="app-code">from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Welcome to PaaS Cloud Computing"
+
+if __name__ == "__main__":
+    app.run()</code></pre>
+        </div>
+
+        <!-- FILE 2 -->
+        <div class="code-container">
+            <div class="file-header">
+                <span>requirements.txt</span>
+                <button class="copy-btn" onclick="copyText('req-code')">Copy</button>
+            </div>
+            <pre><code id="req-code">blinker==1.9.0
+click==8.5.0
+Flask==3.1.3
+gunicorn==26.2.0
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+Werkzeug==3.1.9</code></pre>
+        </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-card">
+        <h2><span class="step-number">3</span> Package into Clean Zip File</h2>
+        <p>Zip only the direct contents inside your directory (not the enclosing folder itself):</p>
+        <div class="code-container standalone-code">
+            <pre><code>Compress-Archive -Path app.py, requirements.txt -DestinationPath app.zip -Force</code></pre>
+        </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-card">
+        <h2><span class="step-number">4</span> Run Deployment Commands</h2>
+        <p>Run the following Azure CLI commands sequentially in your terminal:</p>
+
+        <div class="code-container">
+            <div class="file-header">
+                <span>PowerShell / Terminal</span>
+                <button class="copy-btn" onclick="copyText('cli-code')">Copy All</button>
+            </div>
+            <pre><code id="cli-code"># 1. Log in to Azure
+az login
+
+# 2. Create Linux App Service Plan
+az appservice plan create --name myAppServicePlan --resource-group TestResource --sku B1 --is-linux
+
+# 3. Create Web App and configure startup command automatically
+az webapp create --name TestWebAppprogram --resource-group TestResource --plan myAppServicePlan --runtime "PYTHON:3.11" --startup-file "gunicorn --bind=0.0.0.0:8000 app:app"
+
+# 4. Enable remote build to install requirements.txt automatically
+az webapp config appsettings set --name TestWebAppprogram --resource-group TestResource --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+
+# 5. Deploy the application zip package
+az webapp deploy --name TestWebAppprogram --resource-group TestResource --src-path app.zip --type zip</code></pre>
+        </div>
+
+        <div class="note">
+            💡 <strong>Why this works automatically:</strong> Passing <code>--startup-file "gunicorn --bind=0.0.0.0:8000 app:app"</code> during creation configures Azure to launch <code>app.py</code> directly, skipping manual portal configurations!
+        </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="success-banner">
+        🎉 Done! Open http://testwebappprogram.azurewebsites.net to see "Welcome to PaaS Cloud Computing"!
+    </div>
+</div>
+
+<script>
+    function copyText(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+</script>
+
+</body>
+</html>
+```
 </body>
 </html>
